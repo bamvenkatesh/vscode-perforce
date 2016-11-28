@@ -1,0 +1,137 @@
+{
+  "name": "perforce",
+  "displayName": "Perforce",
+  "description": "This extension helps in perforce file operations.",
+  "version": "0.0.1",
+  "publisher": "bam",
+  "engines": {
+    "vscode": "^1.5.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Perforce Configuration",
+      "properties": {
+        "perforce.host": {
+          "type": "string",
+          "default": "ssl:chilgoza.corp.adobe.com:30710",
+          "description": "Hostname of the client workstation."
+        },
+        "perforce.client": {
+          "type": "string",
+          "default": "sjeyabal_mbp",
+          "description": "Name of the current client workspace."
+        },
+        "perforce.user": {
+          "type": "string",
+          "default": "vmanga",
+          "description": "Current Perforce user name."
+        },
+        "perforce.path": {
+          "type": "string",
+          "default": "none",
+          "description": "Configure the path of p4."
+        },
+        "perforce.activeChangelist": {
+          "type": "string",
+          "default": "default",
+          "description": "Active changelist to put file changes."
+        },
+        "perforce.editOnFileSave": {
+          "type": "string",
+          "default": "true",
+          "description": "Automatically opens the file for edit in active changelist when saved."
+        },
+        "perforce.addOnFileCreate": {
+          "type": "string",
+          "default": "true",
+          "description": "Automatically opens the file for addition to depot in active changelist when created."
+        },
+        "perforce.deleteOnFileDelete": {
+          "type": "string",
+          "default": "true",
+          "description": "Automatically opens the file for deletion from depot in active changelist when deleted."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "perforce.login",
+        "title": "Login",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.logout",
+        "title": "Logout",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.setactivechangelist",
+        "title": "Set Active Changelist",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.edit",
+        "title": "Edit",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.add",
+        "title": "Add",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.delete",
+        "title": "Delete",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.rename",
+        "title": "Rename",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.move",
+        "title": "Move",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.diff",
+        "title": "Diff",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.diffRevision",
+        "title": "Diff Revision",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.revert",
+        "title": "Revert",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.showMenu",
+        "title": "Show Menu",
+        "category": "Perforce"
+      }
+    ]
+  },
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "devDependencies": {
+    "eslint": "^3.6.0",
+    "vscode": "^1.0.0"
+  },
+  "dependencies": {
+    "tmp": "0.0.31"
+  }
+}
