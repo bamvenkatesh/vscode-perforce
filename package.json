@@ -1,8 +1,9 @@
 {
-  "name": "perforce",
+  "name": "vscode-perforce",
   "displayName": "Perforce",
-  "description": "This extension helps in perforce file operations.",
-  "version": "0.0.1",
+  "icon": "images/icon.png",
+  "description": "With perforce extension, you can perform basic perforce operations within VSCode.",
+  "version": "1.0.0",
   "publisher": "bam",
   "engines": {
     "vscode": "^1.5.0"
@@ -21,17 +22,17 @@
       "properties": {
         "perforce.host": {
           "type": "string",
-          "default": "ssl:chilgoza.corp.adobe.com:30710",
+          "default": "none",
           "description": "Hostname of the client workstation."
         },
         "perforce.client": {
           "type": "string",
-          "default": "sjeyabal_mbp",
+          "default": "none",
           "description": "Name of the current client workspace."
         },
         "perforce.user": {
           "type": "string",
-          "default": "vmanga",
+          "default": "none",
           "description": "Current Perforce user name."
         },
         "perforce.path": {
@@ -46,17 +47,17 @@
         },
         "perforce.editOnFileSave": {
           "type": "string",
-          "default": "true",
+          "default": "false",
           "description": "Automatically opens the file for edit in active changelist when saved."
         },
         "perforce.addOnFileCreate": {
           "type": "string",
-          "default": "true",
+          "default": "false",
           "description": "Automatically opens the file for addition to depot in active changelist when created."
         },
         "perforce.deleteOnFileDelete": {
           "type": "string",
-          "default": "true",
+          "default": "false",
           "description": "Automatically opens the file for deletion from depot in active changelist when deleted."
         }
       }
@@ -74,53 +75,100 @@
       },
       {
         "command": "perforce.setactivechangelist",
-        "title": "Set Active Changelist",
+        "title": "SetActiveChangelist - Set the active changelist to work on.",
         "category": "Perforce"
       },
       {
         "command": "perforce.edit",
-        "title": "Edit",
+        "title": "Edit - Opens file(s) in a client workspace for edit.",
         "category": "Perforce"
       },
       {
         "command": "perforce.add",
-        "title": "Add",
+        "title": "Add - Open file(s) in a client workspace for addition to the depot.",
         "category": "Perforce"
       },
       {
         "command": "perforce.delete",
-        "title": "Delete",
+        "title": "Delete - Open file(s) in a client workspace for deletion from the depot.",
         "category": "Perforce"
       },
       {
         "command": "perforce.rename",
-        "title": "Rename",
+        "title": "Rename - Renaming files in a client workspace.",
         "category": "Perforce"
       },
       {
         "command": "perforce.move",
-        "title": "Move",
+        "title": "Move - Move a file from one location to another.",
         "category": "Perforce"
       },
       {
         "command": "perforce.diff",
-        "title": "Diff",
+        "title": "Diff - Compare a client workspace file to the revision currently being edited",
         "category": "Perforce"
       },
       {
         "command": "perforce.diffRevision",
-        "title": "Diff Revision",
+        "title": "Diff Revision - Compare a client workspace file to a revision in the depot.",
         "category": "Perforce"
       },
       {
         "command": "perforce.revert",
-        "title": "Revert",
+        "title": "Revert - Discard changes made to open files.",
         "category": "Perforce"
       },
       {
         "command": "perforce.showMenu",
-        "title": "Show Menu",
+        "title": "Show Menu - Show Perforce options menu.",
         "category": "Perforce"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "perforce.login",
+        "key": "ctrl+p l",
+        "mac": "cmd+p l"
+      },
+      {
+        "command": "perforce.setactivechangelist",
+        "key": "ctrl+p c",
+        "mac": "cmd+p c"
+      },
+      {
+        "command": "perforce.edit",
+        "key": "ctrl+p e",
+        "mac": "cmd+p e"
+      },
+      {
+        "command": "perforce.add",
+        "key": "ctrl+p a",
+        "mac": "cmd+p a"
+      },
+      {
+        "command": "perforce.delete",
+        "key": "ctrl+p d",
+        "mac": "cmd+p d"
+      },
+      {
+        "command": "perforce.move",
+        "key": "ctrl+p m",
+        "mac": "cmd+p m"
+      },
+      {
+        "command": "perforce.diff",
+        "key": "ctrl+p d",
+        "mac": "cmd+p d"
+      },
+      {
+        "command": "perforce.revert",
+        "key": "ctrl+p r",
+        "mac": "cmd+p r"
+      },
+      {
+        "command": "perforce.showMenu",
+        "key": "ctrl+p space",
+        "mac": "cmd+p space"
       }
     ]
   },
