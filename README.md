@@ -1,10 +1,10 @@
 # Perforce for VSCode
 
-    With perforce extension, you can perform basic perforce operations within VSCode.
+With perforce extension, you can perform basic perforce operations within VSCode.
 
 ## Features
 
-    Basic operations in perforce are supported with this extension.
+Basic operations in perforce are supported with this extension.
 
 Choose commands from Command Palette:
 
@@ -48,6 +48,10 @@ Configure below settings for the better usage of this extension
 * `perforce.addOnFileCreate`: Automatically open the file for add operaiton on create.
 * `perforce.deleteOnFileDelete`: Automatically open the file for deletion operation on file delete.
 
+## Pro Tip
+
+    Create templates with perforce RCS Keywords using [Templates Extension](https://marketplace.visualstudio.com/items?itemName=bam.vscode-file-templates)
+    and use Perforce extension to open these files for edit/add with +k (RCS keyword expansion) flag.
 
 ### 1.0.0
 

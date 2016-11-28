@@ -168,7 +168,7 @@ function editfile(){
         
     getActiveChangelist(true)
         .then( activecl => {
-            exec('p4 edit -c ' + activecl + ' ' + fileName, (err, stdout, stderr) => {
+            exec('p4 edit -t +k -c ' + activecl + ' ' + fileName, (err, stdout, stderr) => {
                 if(stderr || err)
                     console.log(stderr || err);
                 else{
@@ -240,6 +240,8 @@ function addFile(event){
     let fileName;
     if(event && event._scheme === 'file' && event._fsPath)
         fileName = event._fsPath;
+    else
+        fileName = getActiveFile();
 
     if(!fileName)
         return;
@@ -254,7 +256,7 @@ function addFile(event){
             
             getActiveChangelist(true)
                 .then( activecl => {
-                    exec('p4 add -c ' + activecl + ' ' + fileName, (err, stdout, stderr) => {
+                    exec('p4 add -t +k -c ' + activecl + ' ' + fileName, (err, stdout, stderr) => {
                         if(stderr || err)
                             console.log(stderr || err);
                         else{
@@ -297,7 +299,7 @@ function renameFile(move){
             .then( activecl => {
 
                 let moveFile = () => {
-                    exec('p4 move -c ' + activecl + ' ' + fileName + ' ' + newFilePath, (err, stdout, stderr) => {
+                    exec('p4 move -t +k -c ' + activecl + ' ' + fileName + ' ' + newFilePath, (err, stdout, stderr) => {
                         if(stderr || err)
                             return;
 
@@ -309,8 +311,8 @@ function renameFile(move){
                     });
                 };
 
-                exec('p4 add -c ' + activecl + ' ' + fileName, (err, stdout, stderr) => {
-                    exec('p4 edit -c ' + activecl + ' ' + fileName, (err, stdout, stderr) => {
+                exec('p4 add -t +k -c ' + activecl + ' ' + fileName, (err, stdout, stderr) => {
+                    exec('p4 edit -t +k -c ' + activecl + ' ' + fileName, (err, stdout, stderr) => {
                         if(stderr || err)
                             console.log(stderr || err);
                         else
@@ -428,7 +430,7 @@ function isFolderOpen(){
 }
 
 function checkIfFileExistsInDepot(fileName){
-    new Promise( (resolve, reject) => {
+    return new Promise( (resolve, reject) => {
         exec('p4 files -e ' + fileName, (err, stdout, stderr) => {
             if(stderr)
                 resolve(false);
@@ -637,8 +639,13 @@ function activate(context) {
                     return;
 
                 let config = vscode.workspace.getConfiguration('perforce');
-                if(config.get('editOnFileSave'))
-                    checkLoginStatusNExecCommand('edit');
+                if(config.get('editOnFileSave')){
+                    getActiveEditorP4Status()
+                        .then( response => {
+                            if(response.code === 2)
+                                checkLoginStatusNExecCommand('edit');
+                        })
+                }
             });
 
             let fileWatcher = vscode.workspace.createFileSystemWatcher( root + '/**/*.*', false, true, false);
