@@ -8,17 +8,17 @@
 
 Choose commands from Command Palette:
 
-![Command Palette](https://github.com/bamvenkatesh/vscode-file-templates/raw/master/images/palette.png)
+![Command Palette](https://github.com/bamvenkatesh/vscode-perforce/raw/master/images/palette.png)
 <br/><br/><br/>
 
 Status bar Perforce icon:
 
-![New File](https://github.com/bamvenkatesh/vscode-file-templates/raw/master/images/statusbar.png)
+![New File](https://github.com/bamvenkatesh/vscode-perforce/raw/master/images/statusbar.png)
 <br/><br/><br/>
 
 Choose option from the Perforce Menu:
 
-![New File](https://github.com/bamvenkatesh/vscode-file-templates/raw/master/images/menu.png)
+![New File](https://github.com/bamvenkatesh/vscode-perforce/raw/master/images/menu.png)
 <br/><br/><br/>
 
 ## Usage
