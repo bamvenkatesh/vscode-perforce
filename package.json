@@ -8,9 +8,12 @@
   "engines": {
     "vscode": "^1.5.0"
   },
+  "license":"MIT",
   "categories": [
-    "Other"
+    "Other",
+    "Productivity"
   ],
+  "keywords":["perforce","version control system","VCS","p4","p4v"],
   "activationEvents": [
     "*"
   ],
