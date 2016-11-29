@@ -45,10 +45,8 @@ function login(silent){
                     vscode.window.showInputBox({
                         'prompt':'Please enter the password'
                     }).then(pswd => {
-                        if(pswd){
+                        if(pswd)
                             child.stdin.write(pswd + '\n');
-                            login();
-                        }
                     });
                 }else if( resp.indexOf('logged in') !== -1 && !silent){
                     resolve('Perforce: Login Successful');
@@ -59,7 +57,8 @@ function login(silent){
 
             child.stderr.on('data', (data) => {
                 console.log(`stderr: ${data}`);
-                // reject(data);
+                vscode.window.setStatusBarMessage('Perforce: Login Failure. Please try again', 3000);
+                updateStatusBar();
             });
         });
     });
