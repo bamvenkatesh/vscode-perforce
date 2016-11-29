@@ -53,6 +53,10 @@ Configure below settings for the better usage of this extension
 Create templates with perforce RCS Keywords using [Templates Extension](https://marketplace.visualstudio.com/items?itemName=bam.vscode-file-templates)
 and use Perforce extension to open these files for edit/add with +k (RCS keyword expansion) flag.
 
+### 1.0.1
+
+Fixing few issues during perforce login and updating the keybindings. 
+
 ### 1.0.0
 
 Initial release of Perforce Extension.

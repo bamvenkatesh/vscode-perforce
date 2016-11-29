@@ -3,7 +3,7 @@
   "displayName": "Perforce",
   "icon": "images/icon.png",
   "description": "With perforce extension, you can perform basic perforce operations within VSCode.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "bam",
   "engines": {
     "vscode": "^1.5.0"
@@ -127,48 +127,48 @@
     "keybindings": [
       {
         "command": "perforce.login",
-        "key": "ctrl+p l",
-        "mac": "cmd+p l"
+        "key": "alt+p l",
+        "mac": "alt+p l"
       },
       {
         "command": "perforce.setactivechangelist",
-        "key": "ctrl+p c",
-        "mac": "cmd+p c"
+        "key": "alt+p c",
+        "mac": "alt+p c"
       },
       {
         "command": "perforce.edit",
-        "key": "ctrl+p e",
-        "mac": "cmd+p e"
+        "key": "alt+p e",
+        "mac": "alt+p e"
       },
       {
         "command": "perforce.add",
-        "key": "ctrl+p a",
-        "mac": "cmd+p a"
+        "key": "alt+p a",
+        "mac": "alt+p a"
       },
       {
         "command": "perforce.delete",
-        "key": "ctrl+p d",
-        "mac": "cmd+p d"
+        "key": "alt+p d",
+        "mac": "alt+p d"
       },
       {
         "command": "perforce.move",
-        "key": "ctrl+p m",
-        "mac": "cmd+p m"
+        "key": "alt+p m",
+        "mac": "alt+p m"
       },
       {
         "command": "perforce.diff",
-        "key": "ctrl+p d",
-        "mac": "cmd+p d"
+        "key": "alt+p d",
+        "mac": "alt+p d"
       },
       {
         "command": "perforce.revert",
-        "key": "ctrl+p r",
-        "mac": "cmd+p r"
+        "key": "alt+p r",
+        "mac": "alt+p r"
       },
       {
         "command": "perforce.showMenu",
-        "key": "ctrl+p space",
-        "mac": "cmd+p space"
+        "key": "alt+p space",
+        "mac": "alt+p space"
       }
     ]
   },

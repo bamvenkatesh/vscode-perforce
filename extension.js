@@ -45,8 +45,10 @@ function login(silent){
                     vscode.window.showInputBox({
                         'prompt':'Please enter the password'
                     }).then(pswd => {
-                        child.stdin.write(pswd + '\n');
-                        login();
+                        if(pswd){
+                            child.stdin.write(pswd + '\n');
+                            login();
+                        }
                     });
                 }else if( resp.indexOf('logged in') !== -1 && !silent){
                     resolve('Perforce: Login Successful');
@@ -57,7 +59,7 @@ function login(silent){
 
             child.stderr.on('data', (data) => {
                 console.log(`stderr: ${data}`);
-                reject(data);
+                // reject(data);
             });
         });
     });
