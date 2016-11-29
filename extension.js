@@ -27,40 +27,40 @@ function check_login_status(){
 function login(silent){
     return new Promise( (resolve, reject) => {
         check_login_status()
-        .then( resp => {
-            // user has already logged into perforce.
-            resolve('Login Successful');
-            vscode.window.setStatusBarMessage('Perforce: Login Successful', 3000);
-            updateStatusBar();
-        })
-        .catch( reason => {
-            // not logged in. So catch the error and login to perforce
-            
-            let child = spawn('p4',['login']);
-            child.stdout.on('data', (data) => {
-                console.log(`stdout: ${data}`);
-
-                let resp = data.toString().trim();
-                if(resp.indexOf('password') !== -1){
-                    vscode.window.showInputBox({
-                        'prompt':'Please enter the password'
-                    }).then(pswd => {
-                        if(pswd)
-                            child.stdin.write(pswd + '\n');
-                    });
-                }else if( resp.indexOf('logged in') !== -1 && !silent){
-                    resolve('Perforce: Login Successful');
-                    vscode.window.setStatusBarMessage('Perforce: Login Successful', 3000);
-                    updateStatusBar();
-                }
-            });
-
-            child.stderr.on('data', (data) => {
-                console.log(`stderr: ${data}`);
-                vscode.window.setStatusBarMessage('Perforce: Login Failure. Please try again', 3000);
+            .then( resp => {
+                // user has already logged into perforce.
+                resolve('Login Successful');
+                vscode.window.setStatusBarMessage('Perforce: Login Successful', 3000);
                 updateStatusBar();
+            })
+            .catch( reason => {
+                // not logged in. So catch the error and login to perforce
+                
+                let child = spawn('p4',['login']);
+                child.stdout.on('data', (data) => {
+                    console.log(`stdout: ${data}`);
+
+                    let resp = data.toString().trim();
+                    if(resp.indexOf('password') !== -1){
+                        vscode.window.showInputBox({
+                            'prompt':'Please enter the password'
+                        }).then(pswd => {
+                            if(pswd)
+                                child.stdin.write(pswd + '\n');
+                        });
+                    }else if( resp.indexOf('logged in') !== -1 && !silent){
+                        resolve('Perforce: Login Successful');
+                        vscode.window.setStatusBarMessage('Perforce: Login Successful', 3000);
+                        updateStatusBar();
+                    }
+                });
+
+                child.stderr.on('data', (data) => {
+                    console.log(`stderr: ${data}`);
+                    vscode.window.setStatusBarMessage('Perforce: Login Failure. Please try again', 3000);
+                    updateStatusBar();
+                });
             });
-        });
     });
 }
 
@@ -515,6 +515,9 @@ function checkLoginStatusNExecCommand(command, info){
     check_login_status()
         .then( () => {
             switch(command){
+                case 'login':
+                    vscode.window.setStatusBarMessage(`Perforce: Login Successful.`, 3000);
+                    break;
                 case 'edit':
                     editfile();
                     break;
