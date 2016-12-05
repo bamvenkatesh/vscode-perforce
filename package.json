@@ -3,15 +3,14 @@
   "displayName": "Perforce",
   "icon": "images/icon.png",
   "description": "With perforce extension, you can perform basic perforce operations within VSCode.",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "publisher": "bam",
   "engines": {
     "vscode": "^1.5.0"
   },
   "license":"MIT",
   "categories": [
-    "Other",
-    "Productivity"
+    "Other"
   ],
   "keywords":["perforce","version control system","VCS","p4","p4v"],
   "activationEvents": [
@@ -49,19 +48,34 @@
           "description": "Active changelist to put file changes."
         },
         "perforce.editOnFileSave": {
-          "type": "string",
-          "default": "false",
+          "type": "boolean",
+          "default": false,
           "description": "Automatically opens the file for edit in active changelist when saved."
         },
         "perforce.addOnFileCreate": {
-          "type": "string",
-          "default": "false",
+          "type": "boolean",
+          "default": false,
           "description": "Automatically opens the file for addition to depot in active changelist when created."
         },
         "perforce.deleteOnFileDelete": {
-          "type": "string",
-          "default": "false",
+          "type": "boolean",
+          "default": false,
           "description": "Automatically opens the file for deletion from depot in active changelist when deleted."
+        },
+        "perforce.excludeFiles": {
+          "type": "array",
+          "default": [],
+          "description": "Exclude files to Automatically act upon by Perforce."
+        },        
+        "perforce.files": {
+          "type": "array",
+          "default": [],
+          "description": "Include files to Automatically act upon by Perforce.If both files and excludeFiles are set, files take the precedence."
+        },
+        "perforce.submitoption": {
+          "type": "string",
+          "default": "submitunchanged",
+          "description": "Override the SubmitOptions: setting in the p4 client form."
         }
       }
     },
@@ -122,6 +136,16 @@
         "category": "Perforce"
       },
       {
+        "command": "perforce.clinfo",
+        "title": "Revert - Show the info of a changelist.",
+        "category": "Perforce"
+      },
+      {
+        "command": "perforce.submit",
+        "title": "Submit - Commit a pending changelist and the files it contains to the depot.",
+        "category": "Perforce"
+      },
+      {
         "command": "perforce.showMenu",
         "title": "Show Menu - Show Perforce options menu.",
         "category": "Perforce"
@@ -167,6 +191,11 @@
         "command": "perforce.revert",
         "key": "alt+p r",
         "mac": "alt+p r"
+      },
+      {
+        "command": "perforce.submit",
+        "key": "alt+p s",
+        "mac": "alt+p s"
       },
       {
         "command": "perforce.showMenu",

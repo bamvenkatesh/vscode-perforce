@@ -6,7 +6,7 @@ let path = require('path');
 let tmp = require('tmp');
 let spawn = child_process.spawn;
 let exec = child_process.exec;
-
+let _outChannel = vscode.window.createOutputChannel('Perfoce Log');
 let _statusBarItem;
 
 function check_login_status(){
@@ -75,7 +75,7 @@ function logout(){
     });
 }
 
-function getChangelists(){
+function getChangelists(excludeDefault){
     return new Promise( (resolve, reject) => {
         let config = vscode.workspace.getConfiguration('perforce');
         let user = config.get('user','none');
@@ -101,7 +101,9 @@ function getChangelists(){
             });
 
             // Adding the default CL to the list
-            changes.push({label:'Default', value:'default'});
+            if(!excludeDefault)
+                changes.push({label:'Default', value:'default'});
+
             resolve(changes);
         });
     });
@@ -386,6 +388,64 @@ function diffRevision(){
     });
 }
 
+function submit(){
+
+    let isValidSubmitOption = option => {
+        switch(option){
+            case 'submitunchanged': 
+            case 'submitunchanged+reopen': 
+            case 'revertunchanged':
+            case 'revertunchanged+reopen': 
+            case 'leaveunchanged':
+            case 'leaveunchanged+reopen': 
+                return true;
+            default:
+                return false;
+        }
+    };
+
+    getChangelists()
+        .then( changelists => {
+            vscode.window.showQuickPick(changelists).then( changelist => {
+                let config = vscode.workspace.getConfiguration('perforce');
+                let option = config.get('submitoption');
+                let submitOption = '';
+                if(isValidSubmitOption(option))
+                    submitOption = `-f ${option}`;
+
+                exec(`p4 submit ${submitOption} -c ${changelist.value}`, (err, stdout, stderr) => {
+                    if(stderr || err)
+                        console.log(stderr || err);
+                    else{
+                        vscode.window.setStatusBarMessage(`Perforce: Changelist ${changelist.value} submitted`, 3000);
+                        updateStatusBar();
+                    }
+                });
+            });
+        })
+        .catch(reason => {
+            reason = reason.replace('\n',' ');
+            vscode.window.setStatusBarMessage(reason, 3000);
+        });
+}
+
+function changelistInfo(){
+    getChangelists(true)
+        .then( changelists => {
+            vscode.window.showQuickPick(changelists).then( changelist => {
+                exec(`p4 describe ${changelist.value}`, (err, stdout, stderr) => {
+                    if(stderr || err)
+                        console.log(stderr || err);
+                    else{
+                        _outChannel.clear();
+                        _outChannel.append(stdout);
+                        _outChannel.show();
+                    }
+                });
+            });
+        });
+}
+
 function getClientRoot(){
     return new Promise( (resolve, reject) => {
         exec('p4 info', (err, stdout, stderr) => {
@@ -545,6 +605,12 @@ function checkLoginStatusNExecCommand(command, info){
                 case 'logout':
                     logout();
                     break;
+                case 'submit':
+                    submit();
+                    break;
+                case 'changelist info':
+                    changelistInfo();
+                    break;
                 case 'setActiveChangelist':
                     setactivechangelist();
                     break;
@@ -566,6 +632,8 @@ function showMenu(){
     list.push({'label':'rename', 'description':'Renaming files in a client workspace.'})
     list.push({'label':'move', 'description':'Move a file from one location to another.'})
     list.push({'label':'revert', 'description':'Discard changes made to open files.'})
+    list.push({'label':'changelist info', 'description':'Show the info of the changelist.'})
+    list.push({'label':'submit', 'description':'Commit a pending changelist and the files it contains to the depot.'})
     list.push({'label':'diff', 'description':'Compare a client workspace file to the revision currently being edited'})
     list.push({'label':'diffRevision', 'description':'Compare a client workspace file to a revision in the depot.'})
     list.push({'label':'login', 'description':'Log in to the Perforce service by obtaining a ticket.'})
@@ -579,6 +647,35 @@ function showMenu(){
 
              checkLoginStatusNExecCommand(option.label);
         });
+}
+
+function isFileExcludedOrNotInPath(fileName){
+    let filePathRelToRoot = vscode.workspace.asRelativePath(fileName);
+    if( filePathRelToRoot === fileName)
+        return true;
+
+    let config = vscode.workspace.getConfiguration('perforce');
+    let excludeFilesList = config.get('excludeFiles');
+    let includeFilesList = config.get('files');
+
+    let checkIfPathMatches = (file, list) => {
+        for(let i = 0 ; i < list.length; ++i){
+            let folderPath = list[i];
+            folderPath = folderPath.replace('/', path.sep);
+            let folderPathWithSep = folderPath;
+            if(folderPath.charAt(folderPath.length-1) !== path.sep)
+                folderPathWithSep += path.sep;
+
+            if(folderPath === filePathRelToRoot || filePathRelToRoot.indexOf(folderPathWithSep) === 0)
+                return true;
+        }
+    };
+
+    if(includeFilesList && includeFilesList.length > 0){
+        return !checkIfPathMatches(filePathRelToRoot, includeFilesList);
+    }else{
+        return checkIfPathMatches(filePathRelToRoot, excludeFilesList);
+    }
 }
 
 // this method is called when your extension is activated
@@ -615,6 +712,12 @@ function activate(context) {
 
     disposable = vscode.commands.registerCommand('perforce.revert', checkLoginStatusNExecCommand.bind(this, 'revert'));
     context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerCommand('perforce.clinfo', checkLoginStatusNExecCommand.bind(this, 'changelist info'));
+    context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerCommand('perforce.submit', checkLoginStatusNExecCommand.bind(this, 'submit'));
+    context.subscriptions.push(disposable);
     
     disposable = vscode.commands.registerCommand('perforce.diff', checkLoginStatusNExecCommand.bind(this, 'diff'));
     context.subscriptions.push(disposable);
@@ -633,17 +736,13 @@ function activate(context) {
             if(!resp)
                 return;
 
-            // TODO: register as per config settings
             vscode.workspace.onWillSaveTextDocument( (event) => {
                 if(!event.document)
                     return;
                 
                 let fileName = event.document.fileName;
-                if(vscode.workspace.asRelativePath(fileName) === fileName)
-                    return;
-
                 let config = vscode.workspace.getConfiguration('perforce');
-                if(config.get('editOnFileSave')){
+                if(!isFileExcludedOrNotInPath(fileName) && config.get('editOnFileSave') === true){
                     getActiveEditorP4Status()
                         .then( response => {
                             if(response.code === 2)
@@ -655,12 +754,13 @@ function activate(context) {
             let fileWatcher = vscode.workspace.createFileSystemWatcher( root + '/**/*.*', false, true, false);
             fileWatcher.onDidDelete((event) => {
                 let config = vscode.workspace.getConfiguration('perforce');
-                if(config.get('deleteOnFileDelete'))
+                if(!isFileExcludedOrNotInPath(event._fsPath) && config.get('deleteOnFileDelete') === true)
                     checkLoginStatusNExecCommand('delete', event);
             });
+
             fileWatcher.onDidCreate((event) => {
                 let config = vscode.workspace.getConfiguration('perforce');
-                if(config.get('addOnFileCreate'))
+                if(!isFileExcludedOrNotInPath( event._fsPath) && config.get('addOnFileCreate') === true)
                     checkLoginStatusNExecCommand('add', event);
             });
         });

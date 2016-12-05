@@ -47,16 +47,24 @@ Configure below settings for the better usage of this extension
 * `perforce.editOnFileSave`: Automatically open the file for edit on save.
 * `perforce.addOnFileCreate`: Automatically open the file for add operaiton on create.
 * `perforce.deleteOnFileDelete`: Automatically open the file for deletion operation on file delete.
+* `perforce.excludeFiles`: Exclude files to Automatically act upon by Perforce.
+* `perforce.files`: Include files to Automatically act upon by Perforce.If both files and excludeFiles are set, files take the precedence.
 
 ## Pro Tip
 
 Create templates with perforce RCS Keywords using [Templates Extension](https://marketplace.visualstudio.com/items?itemName=bam.vscode-file-templates)
 and use Perforce extension to open these files for edit/add with +k (RCS keyword expansion) flag.
 
+### 1.1.0
+
+* Added Files exclude and include option.
+* Added Perforce Submit option.
+* Added Changelist Info option.
+
 ### 1.0.2
 
-Fixing few minor issues. 
+* Fixed few minor issues. 
 
 ### 1.0.0
 
-Initial release of Perforce Extension.
+* Initial release of Perforce Extension.
